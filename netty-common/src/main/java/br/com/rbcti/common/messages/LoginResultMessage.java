@@ -7,12 +7,14 @@ import br.com.rbcti.common.util.ByteBufferWorker;
 
 /**
  *
- * [tam][id][versao][code][uuid]
- * [tam]           2 bytes - uint
- * [id]            2 bytes - uint
- * [versao]        1 bytes - uint
- * [code]          1 bytes - uint - 1-LOGIN OK  2-LOGIN NãO OK
- * [uuid]          n bytes - string ascii (session id, são preenchido caso código 1)
+ * Message structure:<br>
+ *
+ * [len][id][version][code][uuid]<br>
+ * [tam]           2 bytes - uint<br>
+ * [id]            2 bytes - uint<br>
+ * [versao]        1 bytes - uint<br>
+ * [code]          1 bytes - uint - 1-LOGIN OK  2-LOGIN NOT OK<br>
+ * [uuid]          n bytes - string ascii (session id, will be filled in case code 1)<br>
  *
  * @author Renato Cunha
  *
@@ -32,12 +34,12 @@ public class LoginResultMessage implements SimpleMessage {
 
     public LoginResultMessage(byte[] _data) {
 
-    	ByteBuffer buffer = ByteBuffer.wrap(_data);
+        ByteBuffer buffer = ByteBuffer.wrap(_data);
 
-    	int len = ByteBufferWorker.getUnsignedShort(buffer);
-    	int id = ByteBufferWorker.getUnsignedShort(buffer);
+        int len = ByteBufferWorker.getUnsignedShort(buffer);
+        ByteBufferWorker.getUnsignedShort(buffer); // id
 
-        short version = ByteBufferWorker.getUnsignedByte(buffer);
+        ByteBufferWorker.getUnsignedByte(buffer); // version
         returnCode = ByteBufferWorker.getUnsignedByte(buffer);
 
         if(len > 4) {

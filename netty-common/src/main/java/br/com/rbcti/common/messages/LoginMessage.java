@@ -7,11 +7,13 @@ import br.com.rbcti.common.util.ByteBufferWorker;
 
 /**
  *
- * [tam][id][versao][usuarioSenha]
- * [tam]                2 bytes - uint
- * [id]                 2 bytes - uint
- * [versao]             1 bytes - uint
- * [usuarioSenha]       n bytes - string ascii
+ * Message structure:<br>
+ *
+ * [len][id][version][userPassword]<br>
+ * [len]                2 bytes - uint<br>
+ * [id]                 2 bytes - uint<br>
+ * [version]            1 bytes - uint<br>
+ * [userPassword]       n bytes - string ascii<br>
  *
  * @author Renato Cunha
  *
@@ -52,9 +54,9 @@ public class LoginMessage implements SimpleMessage {
 
         ByteBuffer buffer = ByteBuffer.wrap(_data);
 
-        int len = ByteBufferWorker.getUnsignedShort(buffer);
-        int id = ByteBufferWorker.getUnsignedShort(buffer);
-        short version = ByteBufferWorker.getUnsignedByte(buffer);
+        ByteBufferWorker.getUnsignedShort(buffer); // len
+        ByteBufferWorker.getUnsignedShort(buffer); // id
+        ByteBufferWorker.getUnsignedByte(buffer);  // version
         byte[] dst = new byte[_data.length - TAMANHO_HEADER];
         buffer.get(dst);
 

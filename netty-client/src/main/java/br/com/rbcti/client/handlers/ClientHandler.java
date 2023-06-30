@@ -7,13 +7,17 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import br.com.rbcti.common.messages.ReverseMessage;
 import br.com.rbcti.common.messages.SimpleMessage;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-
+/**
+ *
+ *
+ * @author Renato Cunha
+ *
+ */
 public class ClientHandler extends SimpleChannelInboundHandler<SimpleMessage> {
 
     private static final long TIMEOUT = 1000L * 10;
@@ -33,25 +37,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<SimpleMessage> {
             throw new Exception("Timeout exception");
         }
         return msg;
-    }
-
-
-    public synchronized String revert(String text) throws Exception {
-
-        ReverseMessage msg = new ReverseMessage(text);
-        ReverseMessage retorno = null;
-
-        Channel _channel = getChannel();
-
-        if((_channel != null) && (_channel.isActive())) {
-            _channel.writeAndFlush(msg);
-            SimpleMessage retMsg = getMessage();
-            retorno = (ReverseMessage)retMsg;
-        } else {
-            throw new Exception("DESCONECTADO");
-        }
-
-        return retorno.getText();
     }
 
     public Channel getChannel() {

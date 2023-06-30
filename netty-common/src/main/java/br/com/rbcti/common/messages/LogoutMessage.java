@@ -3,17 +3,18 @@ package br.com.rbcti.common.messages;
 import java.nio.ByteBuffer;
 
 /**
-* Mensagem que o cliente deve enviar quando quiser se desconectar
-* <p>
-*
-* [tam][id][versao]<br>
-* [tam]           2 bytes - uint<br>
-* [id]            2 bytes - uint<br>
-* [versao]        1 bytes - uint<br>
-*
-* @author Renato Cunha
-*
-*/
+ * Message that the client must send when he wants to disconnect.<br>
+ *
+ * Message structure:<br>
+ *
+ * [len][id][version]<br>
+ * [len]     2 bytes - uint<br>
+ * [id]      2 bytes - uint<br>
+ * [version] 1 bytes - uint<br>
+ *
+ * @author Renato Cunha
+ *
+ */
 public class LogoutMessage implements SimpleMessage {
 
     private static final int ID = Messages.LOGOUT;
@@ -23,7 +24,7 @@ public class LogoutMessage implements SimpleMessage {
 
     public LogoutMessage() {
 
-    	ByteBuffer buffer = ByteBuffer.allocate(5);
+        ByteBuffer buffer = ByteBuffer.allocate(5);
         buffer.putShort((short)3);
         buffer.putShort((short)ID);
         buffer.put((byte)VERSION);

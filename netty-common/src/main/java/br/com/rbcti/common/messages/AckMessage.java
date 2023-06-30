@@ -5,11 +5,12 @@ import java.nio.ByteBuffer;
 /**
  * Confirmation message (generic use)<br>
  *
+ * Message structure:<br>
  *
- * [tam][id][versao]<br>
- * [tam]           2 bytes - uint<br>
+ * [len][id][version]<br>
+ * [len]           2 bytes - uint<br>
  * [id]            2 bytes - uint<br>
- * [versao]        1 bytes - uint<br>
+ * [version]       1 bytes - uint<br>
  *
  * @author Renato Cunha
  *
@@ -22,10 +23,10 @@ public class AckMessage implements SimpleMessage {
 
     public AckMessage() {
 
-    	ByteBuffer buffer = ByteBuffer.allocate(5);
-    	buffer.putShort((short)3);
-    	buffer.putShort((short)ID);
-    	buffer.put((byte)VERSION);
+        ByteBuffer buffer = ByteBuffer.allocate(5);
+        buffer.putShort((short)3);
+        buffer.putShort((short)ID);
+        buffer.put((byte)VERSION);
 
         this.data = buffer.array();
     }

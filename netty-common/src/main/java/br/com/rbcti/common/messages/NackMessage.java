@@ -7,12 +7,14 @@ import br.com.rbcti.common.util.ByteBufferWorker;
 
 /**
  *
- * [tam][id][versao][code][msg]
- * [tam]           2 bytes - uint
- * [id]            2 bytes - uint
- * [versao]        1 bytes - uint
- * [code]          2 bytes - uint
- * [msg]           n bytes - string ascii (opcional)
+ * Message structure:<br>
+ *
+ * [len][id][version][code][msg]<br>
+ * [len]           2 bytes - uint<br>
+ * [id]            2 bytes - uint<br>
+ * [version]       1 bytes - uint<br>
+ * [code]          2 bytes - uint<br>
+ * [msg]           n bytes - string ascii (optional)<br>
  *
  * @author Renato Cunha
  *
@@ -61,9 +63,9 @@ public class NackMessage implements SimpleMessage {
 
         ByteBuffer buffer = ByteBuffer.wrap(_data);
 
-        int len = ByteBufferWorker.getUnsignedShort(buffer);
-        int id = ByteBufferWorker.getUnsignedShort(buffer);
-        short version = ByteBufferWorker.getUnsignedByte(buffer);
+        ByteBufferWorker.getUnsignedShort(buffer); // len
+        ByteBufferWorker.getUnsignedShort(buffer); // id
+        ByteBufferWorker.getUnsignedByte(buffer);  // version
         int returnCode = ByteBufferWorker.getUnsignedShort(buffer);
 
         int _length = HEADER_LENGTH + FIELD_CODE_LENGTH;
