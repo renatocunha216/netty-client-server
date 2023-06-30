@@ -4,7 +4,6 @@ package br.com.rbcti.client;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import br.com.rbcti.client.handlers.ClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -23,12 +22,6 @@ public class NettyTestesClient {
     private Channel channel;
     private Bootstrap bootstrap;
     EventLoopGroup workerGroup;
-
-    static {
-         //Configuração do log4j
-         //DOMConfigurator.configureAndWatch("log4j.xml", 10000);
-         //LOGGER = Logger.getLogger(NettyTestesClient.class);
-    }
 
     public NettyTestesClient(String host) {
         this.host = host;
@@ -85,34 +78,17 @@ public class NettyTestesClient {
         workerGroup.shutdownGracefully().awaitUninterruptibly(5000);
     }
 
-    public String revert (String texto) throws Exception {
-        ClientHandler clientHandler = (ClientHandler)getChannel().pipeline().get("handler");
-        if ((texto == null) || (texto.length() == 0)) {
-            texto = " ";
-        }
-        String reverted = clientHandler.revert(texto);
-        return reverted;
-    }
-
     public static void main(String[] args) {
-        //System.out.println("::" + args[0]);
-        //String ip = args[0] == null ? "127.0.0.1" : args[0];
 
         NettyTestesClient client = new NettyTestesClient("127.0.0.1", 10079);
 
         try {
             long i = System.currentTimeMillis();
             client.start();
-            System.out.println("Conectou");
+            System.out.println("Connected.");
 
-            String ret = client.revert("renato barbosa da cunha   ");
-            for (int c=0; c<10; c++) {
-                ret = client.revert("renato barbosa da cunha " + c);
-                System.out.println("Retorno::" + ret);
-                Thread.sleep(1000);
-            }
+            // TODO:
 
-            //System.out.println("ret=" + ret);
             long f = System.currentTimeMillis();
 
             System.out.println("Tempo::" + (f-i));
@@ -120,6 +96,7 @@ public class NettyTestesClient {
 
         } catch(Exception e) {
             e.printStackTrace();
+
         } finally {
             try {
                 client.stop();
@@ -128,7 +105,7 @@ public class NettyTestesClient {
             }
             //System.exit(1);
         }
-        System.out.println("FIM");
+        System.out.println("End.");
     }
 
 }
