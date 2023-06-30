@@ -6,7 +6,6 @@ import static br.com.rbcti.common.messages.Messages.LOGIN;
 import static br.com.rbcti.common.messages.Messages.LOGIN_RESULT;
 import static br.com.rbcti.common.messages.Messages.LOGOUT;
 import static br.com.rbcti.common.messages.Messages.NACK;
-import static br.com.rbcti.common.messages.Messages.REVERSE;
 
 import java.nio.ByteBuffer;
 
@@ -29,9 +28,9 @@ public class MessageFactory {
 
     public static SimpleMessage getMessageInstance(ByteBuffer buffer) {
 
-    	ByteBufferWorker.getUnsignedShort(buffer); // length
-    	int id = ByteBufferWorker.getUnsignedShort(buffer);
-    	ByteBufferWorker.getUnsignedByte(buffer); // version
+        ByteBufferWorker.getUnsignedShort(buffer); // length
+        int id = ByteBufferWorker.getUnsignedShort(buffer);
+        ByteBufferWorker.getUnsignedByte(buffer); // version
 
         byte [] data = buffer.array();
 
@@ -55,9 +54,6 @@ public class MessageFactory {
                 break;
             case LOGOUT:
                 response = LOGOUT_MESSAGE;
-                break;
-            case REVERSE:
-                response = new ReverseMessage(data);
                 break;
             default:
                  throw new IllegalArgumentException("Unknown message.");

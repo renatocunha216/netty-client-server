@@ -20,8 +20,6 @@ public final class Messages {
     public static final int SEND_DATA_FILE = 0x0008;
     public static final int END_SEND_FILE = 0x0009;
 
-    public static final int REVERSE = 0x000A;
-
     // Private constructor to prevent objects of this class from being created
     private Messages() {
         throw new AssertionError();
