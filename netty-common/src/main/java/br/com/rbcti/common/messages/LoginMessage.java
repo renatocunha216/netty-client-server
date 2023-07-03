@@ -13,7 +13,8 @@ import br.com.rbcti.common.util.ByteBufferWorker;
  * [len]                2 bytes - uint<br>
  * [id]                 2 bytes - uint<br>
  * [version]            1 bytes - uint<br>
- * [userPassword]       n bytes - string ascii<br>
+ * [usn]                8 bytes - ulong (unique sequential number)<br>
+ * [userAndPassword]    n bytes - string ascii<br>
  *
  * @author Renato Cunha
  *
@@ -23,50 +24,64 @@ public class LoginMessage implements SimpleMessage {
     private static final int ID = Messages.LOGIN;
     private static final short VERSION = 0x01;
 
-    private String login;
-    private String password;
+    private static final int HEADER_LENGTH = 13;
+    private static final byte SEPARATOR = (byte) 0x0A; // \n line feed
+    private static final String CHAR_SEPARATOR = "\n";
 
+    private String user;
+    private String password;
+    private long usn;
     private byte[] data;
 
-    public LoginMessage(String _login, String _password) {
-        final int TAMANHO_HEADER = 5;
-        byte[]bytesUser = _login.getBytes(Charset.forName("US-ASCII"));
-        byte[]bytesPass = _password.getBytes(Charset.forName("US-ASCII"));
-        int dataLen = TAMANHO_HEADER + bytesUser.length + bytesPass.length + 1;
+    public LoginMessage(String _user, String _password, long _usn) {
+
+        byte[] bytesUser = _user.getBytes(Charset.forName("US-ASCII"));
+        byte[] bytesPass = _password.getBytes(Charset.forName("US-ASCII"));
+        int dataLen = HEADER_LENGTH + bytesUser.length + 1 + bytesPass.length;
 
         ByteBuffer buffer = ByteBuffer.allocate(dataLen);
 
-        buffer.putShort((short)(dataLen-2));
-        buffer.putShort((short)ID);
-        buffer.put((byte)VERSION);
+        buffer.putShort((short) (dataLen - 2));
+        buffer.putShort((short) ID);
+        buffer.put((byte) VERSION);
+        buffer.putLong(_usn);
+
         buffer.put(bytesUser);
-        buffer.putChar('\n');
+        buffer.put(SEPARATOR);
         buffer.put(bytesPass);
 
         this.data = buffer.array();
-        setLogin(_login);
-        setPassword(_password);
 
+        this.user = _user;
+        this.password = _password;
+        this.usn = _usn;
     }
 
     public LoginMessage(byte[] _data) {
-        final int TAMANHO_HEADER = 5;
 
         ByteBuffer buffer = ByteBuffer.wrap(_data);
 
-        ByteBufferWorker.getUnsignedShort(buffer); // len
-        ByteBufferWorker.getUnsignedShort(buffer); // id
-        ByteBufferWorker.getUnsignedByte(buffer);  // version
-        byte[] dst = new byte[_data.length - TAMANHO_HEADER];
+        int _len = ByteBufferWorker.getUnsignedShort(buffer);
+        int _id = ByteBufferWorker.getUnsignedShort(buffer);
+        short _version = ByteBufferWorker.getUnsignedByte(buffer);
+
+        if ((_len != (_data.length - 2)) || (_id != ID) || (_version != VERSION)) {
+            throw new IllegalArgumentException("invalid fields.");
+        }
+
+        this.usn = buffer.getLong();
+
+        byte[] dst = new byte[_data.length - HEADER_LENGTH];
         buffer.get(dst);
 
-        String _loginPass = new String(dst, Charset.forName("US-ASCII"));
-        String[] _loginPassArr = _loginPass.split("\n");
+        String _userPass = new String(dst, Charset.forName("US-ASCII"));
+        String[] _userPassArr = _userPass.split(CHAR_SEPARATOR);
 
         this.data = new byte[_data.length];
-        System.arraycopy(this.data, 0, this.data, 0, _data.length);
-        setLogin(_loginPassArr[0]);
-        setPassword(_loginPassArr[1]);
+        this.user = _userPassArr[0];
+        this.password = _userPassArr[1];
+
+        System.arraycopy(_data, 0, this.data, 0, _data.length);
     }
 
     @Override
@@ -91,20 +106,16 @@ public class LoginMessage implements SimpleMessage {
         return ret;
     }
 
-    public String getLogin() {
-        return login;
-    }
-
-    private void setLogin(String login) {
-        this.login = login;
+    public String getUser() {
+        return user;
     }
 
     public String getPassword() {
         return password;
     }
 
-    private void setPassword(String password) {
-        this.password = password;
+    public long getUsn() {
+        return usn;
     }
 
 }
