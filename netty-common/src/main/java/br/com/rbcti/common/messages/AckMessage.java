@@ -43,9 +43,9 @@ public class AckMessage implements SimpleMessage {
 
         ByteBuffer buffer = ByteBuffer.wrap(_data);
 
-        int _len = ByteBufferWorker.getUnsignedShort(buffer);      // len
-        int _id = ByteBufferWorker.getUnsignedShort(buffer);       // id
-        short _version = ByteBufferWorker.getUnsignedByte(buffer); // version
+        int _len = ByteBufferWorker.getUnsignedShort(buffer);
+        int _id = ByteBufferWorker.getUnsignedShort(buffer);
+        short _version = ByteBufferWorker.getUnsignedByte(buffer);
 
         if ((_len != LENGTH) || (_id != ID) || (_version != VERSION)) {
             throw new IllegalArgumentException("invalid fields.");
