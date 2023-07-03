@@ -1,7 +1,6 @@
 package br.com.rbcti.common.messages;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 
 import br.com.rbcti.common.util.ByteBufferWorker;
 
