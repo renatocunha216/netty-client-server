@@ -1,5 +1,7 @@
 package br.com.rbcti.common.util;
 
+import java.math.BigInteger;
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -51,6 +53,62 @@ public class ByteBufferWorker {
 
     public static void putUnsignedInt(ByteBuffer bb, int position, long value) {
         bb.putInt(position, (int) (value & 0xffffffffL));
+    }
+
+    /**
+     * Lê os bytes do buffer e converte para um BigInteger positivo.<br>
+     * Considera padrão Big Endian para conversão dos bytes e um número decimal.
+     *
+     * @param bb
+     * @param length
+     * @return
+     */
+    public static BigInteger getUnsignedBigInteger(ByteBuffer bb, int length) {
+
+        byte[] data = new byte[length];
+
+        bb.get(data);
+
+        byte[] aux = data;
+
+        //o BigInteger segue padrão complemento de dois, portanto o bit mais significativo do byte mais significativo
+        //indica o sinal. Para termos sempre um número positivo é incluído, quando necessário, um byte com valor 0 no
+        //byte mais significativo, garantindo sinal positivo do número.
+        if ((data[0] & 0xff) > 0x7f) {
+            aux = new byte[data.length + 1];
+            aux[0] = 0x00;
+            System.arraycopy(data, 0, aux, 1, data.length);
+        }
+
+        return new BigInteger(aux);
+    }
+
+    /**
+     * Armazena em um buffer os bytes que representam um BigInteger.<br>
+     *
+     * @param bb buffer onde os bytes serão armazenados.
+     * @param value valor numérico positivo que será convertido para bytes no padrão big endian.
+     * @param length tamanho do buffer em que os bytes serão armazenados.
+     */
+    public static void putUnsignedBigInteger(ByteBuffer bb, BigInteger value, int length) {
+
+        byte[] data = new byte[length];
+        byte[] rawData = value.toByteArray();
+
+        if (rawData.length < length) {
+            System.arraycopy(rawData, 0, data, (length - rawData.length), rawData.length);
+
+        } else if (rawData.length == length) {
+            data = rawData;
+
+        } else if ((rawData.length == (length + 1)) && rawData[0] == 0) {
+            System.arraycopy(rawData, 1, data, 0, length);
+
+        } else {
+            throw new BufferOverflowException();
+        }
+
+        bb.put(data);
     }
 
     /**

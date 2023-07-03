@@ -20,7 +20,7 @@ import br.com.rbcti.common.util.ByteBufferWorker;
 public class MessageFactory {
 
     public static final KeepAliveMessage KEPP_ALIVE_MESSAGE = new KeepAliveMessage();
-    public static final AckMessage ACK_MESSAGE = new AckMessage();
+
     public static final LogoutMessage LOGOUT_MESSAGE = new LogoutMessage();
 
     private MessageFactory() {
@@ -41,7 +41,7 @@ public class MessageFactory {
                 response = KEPP_ALIVE_MESSAGE;
                 break;
             case ACK:
-                response = ACK_MESSAGE;
+                response = new AckMessage(data);
                 break;
             case NACK:
                 response = new NackMessage(data);
