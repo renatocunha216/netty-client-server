@@ -21,16 +21,14 @@ public class MessageFactory {
 
     public static final KeepAliveMessage KEPP_ALIVE_MESSAGE = new KeepAliveMessage();
 
-    public static final LogoutMessage LOGOUT_MESSAGE = new LogoutMessage();
-
     private MessageFactory() {
     }
 
     public static SimpleMessage getMessageInstance(ByteBuffer buffer) {
 
-        ByteBufferWorker.getUnsignedShort(buffer); // length
+        ByteBufferWorker.getUnsignedShort(buffer);          // length
         int id = ByteBufferWorker.getUnsignedShort(buffer);
-        ByteBufferWorker.getUnsignedByte(buffer); // version
+        ByteBufferWorker.getUnsignedByte(buffer);           // version
 
         byte [] data = buffer.array();
 
@@ -53,7 +51,7 @@ public class MessageFactory {
                 response = new LoginResultMessage(data);
                 break;
             case LOGOUT:
-                response = LOGOUT_MESSAGE;
+                response = new LogoutMessage(data);
                 break;
             default:
                  throw new IllegalArgumentException("Unknown message.");
