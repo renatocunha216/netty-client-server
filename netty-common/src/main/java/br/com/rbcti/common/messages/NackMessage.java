@@ -9,10 +9,11 @@ import br.com.rbcti.common.util.ByteBufferWorker;
  *
  * Message structure:<br>
  *
- * [len][id][version][code][msg]<br>
+ * [len][id][version][usn][code][msg]<br>
  * [len]           2 bytes - uint<br>
  * [id]            2 bytes - uint<br>
  * [version]       1 bytes - uint<br>
+ * [usn]           8 bytes - ulong (unique sequential number)<br>
  * [code]          2 bytes - uint<br>
  * [msg]           n bytes - string ascii (optional)<br>
  *
@@ -21,66 +22,78 @@ import br.com.rbcti.common.util.ByteBufferWorker;
  */
 public class NackMessage implements SimpleMessage {
 
+    private static final int HEADER_LENGTH = 5;
+    private static final int FIELD_USN_LENGTH = 8;
+    private static final int FIELD_CODE_LENGTH = 2;
+
     private static final int ID = Messages.NACK;
     private static final short VERSION = 0x01;
 
-    private Integer returnCode;
+    private long usn;
+    private int returnCode;
     private String returnMessage;
     private byte[] data;
 
-    public NackMessage(int code, String msg) {
+    public NackMessage(long usn, int code) {
+        this(usn, code, null);
+    }
 
-        final int HEADER_LENGTH = 5;
-        final int FIELD_CODE_LENGTH = 2;
+    public NackMessage(long usn, int code, String msg) {
+
         int msgLen = 0;
-        byte[]msgBytes = null;
+        byte[] msgBytes = null;
 
-        if(msg != null && msg.trim().length() > 0) {
+        if (msg != null && msg.trim().length() > 0) {
             msgBytes = msg.getBytes(Charset.forName("US-ASCII"));
             msgLen = msgBytes.length;
         }
 
-        int tamanho = HEADER_LENGTH + FIELD_CODE_LENGTH + msgLen;
+        int bufferLen = HEADER_LENGTH + FIELD_USN_LENGTH + FIELD_CODE_LENGTH + msgLen;
 
-        ByteBuffer buffer = ByteBuffer.allocate(tamanho);
-        buffer.putShort((short)(tamanho-2));
-        buffer.putShort((short)ID);
-        buffer.put((byte)VERSION);
-        buffer.putShort((short)code);
-        if(msgLen > 0) {
+        ByteBuffer buffer = ByteBuffer.allocate(bufferLen);
+        buffer.putShort((short) (bufferLen - 2));
+        buffer.putShort((short) ID);
+        buffer.put((byte) VERSION);
+        buffer.putLong(usn);
+        buffer.putShort((short) code);
+
+        if (msgLen > 0) {
             buffer.put(msgBytes);
         }
 
+        this.usn = usn;
+        this.returnCode = code;
+        this.returnMessage = msg;
+
         this.data = buffer.array();
-        setReturnCode(Integer.valueOf(code));
-        setReturnMessage(msg);
     }
 
     public NackMessage(byte[] _data) {
 
-        final int HEADER_LENGTH = 5;
-        final int FIELD_CODE_LENGTH = 2;
-
         ByteBuffer buffer = ByteBuffer.wrap(_data);
 
-        ByteBufferWorker.getUnsignedShort(buffer); // len
-        ByteBufferWorker.getUnsignedShort(buffer); // id
-        ByteBufferWorker.getUnsignedByte(buffer);  // version
-        int returnCode = ByteBufferWorker.getUnsignedShort(buffer);
+        int _len = ByteBufferWorker.getUnsignedShort(buffer);
+        int _id = ByteBufferWorker.getUnsignedShort(buffer);
+        int _version = ByteBufferWorker.getUnsignedByte(buffer);
 
-        int _length = HEADER_LENGTH + FIELD_CODE_LENGTH;
+        if ((_len != (_data.length - 2)) || (_id != ID) || (_version != VERSION)) {
+            throw new IllegalArgumentException("invalid fields.");
+        }
 
-        if(_data.length > _length) {
-            byte[] msgBytes = new byte[_data.length - _length];
+        this.usn = buffer.getLong();
+        this.returnCode = ByteBufferWorker.getUnsignedShort(buffer);
+
+        int _partialLength = HEADER_LENGTH + FIELD_USN_LENGTH + FIELD_CODE_LENGTH;
+
+        if (_data.length > _partialLength) {
+            byte[] msgBytes = new byte[_data.length - _partialLength];
             buffer.get(msgBytes);
             String retMsg = new String(msgBytes, Charset.forName("US-ASCII"));
-            setReturnMessage(retMsg);
+            this.returnMessage = retMsg;
         }
 
         this.data = new byte[_data.length];
-        System.arraycopy(this.data, 0, this.data, 0, _data.length);
-        setReturnCode(Integer.valueOf(returnCode));
-
+        System.arraycopy(_data, 0, this.data, 0, _data.length);
     }
 
     @Override
@@ -88,26 +101,16 @@ public class NackMessage implements SimpleMessage {
         return ID;
     }
 
-    public Integer getReturnCode() {
+    public int getReturnCode() {
         return returnCode;
-    }
-
-    private void setReturnCode(Integer returnCode) {
-        this.returnCode = returnCode;
     }
 
     public String getReturnMessage() {
         return returnMessage;
     }
 
-    private void setReturnMessage(String returnMessage) {
-        this.returnMessage = returnMessage;
-    }
-
-    @Override
-    public String toString() {
-        return "NackMessage [returnCode=" + returnCode + ", returnMessage="
-                + returnMessage + "]";
+    public long getUsn() {
+        return usn;
     }
 
     @Override
@@ -125,5 +128,10 @@ public class NackMessage implements SimpleMessage {
         byte[] ret = new byte[this.data.length];
         System.arraycopy(this.data, 0, ret, 0, this.data.length);
         return ret;
+    }
+
+    @Override
+    public String toString() {
+        return "NackMessage [returnCode=" + returnCode + ", returnMessage=" + returnMessage + "]";
     }
 }
