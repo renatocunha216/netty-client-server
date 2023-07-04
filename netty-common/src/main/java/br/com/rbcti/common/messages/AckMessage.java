@@ -29,7 +29,7 @@ public class AckMessage implements SimpleMessage {
 
     public AckMessage(long usn) {
 
-        ByteBuffer buffer = ByteBuffer.allocate(13);
+        ByteBuffer buffer = ByteBuffer.allocate(LENGTH + 2);
         buffer.putShort(LENGTH);
         buffer.putShort((short) ID);
         buffer.put((byte) VERSION);
