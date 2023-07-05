@@ -12,7 +12,8 @@ import br.com.rbcti.common.util.ByteBufferWorker;
  * [len][id][version][code][uuid]<br>
  * [tam]           2 bytes - uint<br>
  * [id]            2 bytes - uint<br>
- * [versao]        1 bytes - uint<br>
+ * [version]       1 bytes - uint<br>
+ * [usn]           8 bytes - ulong (unique sequential number)<br>
  * [code]          1 bytes - uint - 1-LOGIN OK  2-LOGIN NOT OK<br>
  * [uuid]          n bytes - string ascii (session id, will be filled in case code 1)<br>
  *
@@ -27,6 +28,7 @@ public class LoginResultMessage implements SimpleMessage {
     public static final short OK = 0x01;
     public static final short NAO_OK = 0x02;
 
+    private long usn;
     private String uuid;
     private short returnCode;
 
@@ -36,49 +38,59 @@ public class LoginResultMessage implements SimpleMessage {
 
         ByteBuffer buffer = ByteBuffer.wrap(_data);
 
-        int len = ByteBufferWorker.getUnsignedShort(buffer);
-        ByteBufferWorker.getUnsignedShort(buffer); // id
+        int _len = ByteBufferWorker.getUnsignedShort(buffer);
+        int _id = ByteBufferWorker.getUnsignedShort(buffer);
+        short _version = ByteBufferWorker.getUnsignedByte(buffer);
 
-        ByteBufferWorker.getUnsignedByte(buffer); // version
-        returnCode = ByteBufferWorker.getUnsignedByte(buffer);
+        if ((_len != (_data.length - 2)) || (_id != ID) || (_version != VERSION)) {
+            throw new IllegalArgumentException("invalid fields.");
+        }
 
-        if(len > 4) {
-            byte[] dst = new byte[len - 4];
+        this.usn = buffer.getLong();
+        this.returnCode = ByteBufferWorker.getUnsignedByte(buffer);
+
+        if(_len > 12) {
+            byte[] dst = new byte[_len - 12];
             buffer.get(dst);
             this.uuid = new String(dst, Charset.forName("US-ASCII"));
         }
 
         this.data = new byte[_data.length];
-        System.arraycopy(this.data, 0, this.data, 0, _data.length);
+        System.arraycopy(_data, 0, this.data, 0, _data.length);
     }
 
-    public LoginResultMessage(short _returnCode, String _uuid) {
-        final int TAMANHO_HEADER = 5;
-        final int TAMANHO_CODE = 1;
+    public LoginResultMessage(short _returnCode, String _uuid, long _usn) {
+
+        final int HEADER_LENGTH = 5;
+        final int FIELDS_LENGTH = 9;
 
         byte[] dataUUID = null;
-        if(_uuid != null) {
+
+        if (_uuid != null) {
             dataUUID = _uuid.getBytes(Charset.forName("US-ASCII"));
-            setUuid(_uuid);
-        }
-        int tamanho = TAMANHO_HEADER + TAMANHO_CODE;
-        if(dataUUID != null) {
-            tamanho += dataUUID.length;
+            this.uuid = _uuid;
         }
 
-        ByteBuffer buffer = ByteBuffer.allocate(tamanho);
+        int dataLen = HEADER_LENGTH + FIELDS_LENGTH;
 
-        buffer.putShort((short)(tamanho-2));
-        buffer.putShort((short)ID);
-        buffer.put((byte)VERSION);
-        buffer.put((byte)_returnCode);
+        if (dataUUID != null) {
+            dataLen += dataUUID.length;
+        }
 
-        if(dataUUID != null) {
+        ByteBuffer buffer = ByteBuffer.allocate(dataLen);
+
+        buffer.putShort((short) (dataLen - 2));
+        buffer.putShort((short) ID);
+        buffer.put((byte) VERSION);
+        buffer.putLong(_usn);
+        buffer.put((byte) _returnCode);
+
+        if (dataUUID != null) {
             buffer.put(dataUUID);
         }
         this.data = buffer.array();
-        setReturnCode(_returnCode);
-
+        this.usn = _usn;
+        this.returnCode = _returnCode;
     }
 
     @Override
@@ -86,20 +98,16 @@ public class LoginResultMessage implements SimpleMessage {
         return ID;
     }
 
+    public long getUsn() {
+        return usn;
+    }
+
     public String getUuid() {
         return uuid;
     }
 
-    private void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
     public short getReturnCode() {
         return returnCode;
-    }
-
-    private void setReturnCode(short returnCode) {
-        this.returnCode = returnCode;
     }
 
     @Override
