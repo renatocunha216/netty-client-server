@@ -24,7 +24,7 @@ public class CommandFactory {
         registeredCommands.put(Integer.valueOf(Messages.SEND_DATA_FILE), receiveFileCommand);
         registeredCommands.put(Integer.valueOf(Messages.END_SEND_FILE), receiveFileCommand);
 
-        registeredCommands.put(Integer.valueOf(Messages.LOGIN), new LogonCommand());
+        registeredCommands.put(Integer.valueOf(Messages.LOGIN), new LoginCommand());
         registeredCommands.put(Integer.valueOf(Messages.LOGOUT), new LogoutCommand());
     }
 

@@ -13,9 +13,9 @@ import io.netty.channel.ChannelHandlerContext;
  * @author Renato Cunha
  *
  */
-public class LogonCommand implements Command {
+public class LoginCommand implements Command {
 
-    private static final Logger LOGGER = LogManager.getLogger(LogonCommand.class);
+    private static final Logger LOGGER = LogManager.getLogger(LoginCommand.class);
 
     @Override
     public void execute(ChannelHandlerContext channel, Session session, SimpleMessage message) {
