@@ -34,7 +34,6 @@ public class ExampleNettyClient {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
 
         LOGGER.info("Finished example application.");
