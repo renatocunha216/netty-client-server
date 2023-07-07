@@ -19,7 +19,7 @@ public class ExampleNettyClient {
             client.start();
             LOGGER.info("Connected.");
 
-            LoginMessage login = new LoginMessage("user1", "passwrod#123", usn);
+            LoginMessage login = new LoginMessage("user1", "password#123", usn);
 
             LoginResultMessage result = client.loginRequest(login);
 
