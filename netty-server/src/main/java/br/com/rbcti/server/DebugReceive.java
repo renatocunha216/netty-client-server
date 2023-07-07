@@ -24,7 +24,7 @@ public class DebugReceive extends ByteToMessageDecoder {
     protected void decode(ChannelHandlerContext paramChannelHandlerContext, ByteBuf paramByteBuf, List<Object> paramList) throws Exception {
 
         synchronized (DebugReceive.class) {
-            LOGGER.info("Recebendo bytes: {}", paramByteBuf.readableBytes());
+            LOGGER.info("Receiving bytes: {}", paramByteBuf.readableBytes());
             byte [] buf = new byte[paramByteBuf.readableBytes()];
             paramByteBuf.readBytes(buf);
             LOGGER.info(ByteBufferWorker.getDumpString(ByteBuffer.wrap(buf)));
