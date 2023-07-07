@@ -1,10 +1,11 @@
 package br.com.rbcti.server.commands;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.UUID;
 
 import br.com.rbcti.common.Session;
 import br.com.rbcti.common.commands.Command;
+import br.com.rbcti.common.messages.LoginMessage;
+import br.com.rbcti.common.messages.LoginResultMessage;
 import br.com.rbcti.common.messages.SimpleMessage;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -15,10 +16,15 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public class LoginCommand implements Command {
 
-    private static final Logger LOGGER = LogManager.getLogger(LoginCommand.class);
-
     @Override
     public void execute(ChannelHandlerContext channel, Session session, SimpleMessage message) {
-        // TODO: to implement
+
+        LoginMessage loginMessage = (LoginMessage) message;
+
+        //TODO: calls business rules
+        LoginResultMessage response = new LoginResultMessage((short) 1, UUID.randomUUID().toString(), loginMessage.getUsn());
+
+        channel.write(response);
+        channel.flush();
     }
 }

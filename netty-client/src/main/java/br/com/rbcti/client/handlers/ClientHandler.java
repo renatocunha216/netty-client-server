@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import br.com.rbcti.common.messages.LoginMessage;
+import br.com.rbcti.common.messages.LoginResultMessage;
 import br.com.rbcti.common.messages.SimpleMessage;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -25,18 +27,42 @@ public class ClientHandler extends SimpleChannelInboundHandler<SimpleMessage> {
     private static final Logger LOGGER = LogManager.getLogger(ClientHandler.class);
 
     private volatile Channel channel;
-    private final BlockingQueue<SimpleMessage> mensagensRecebidas = new LinkedBlockingQueue<SimpleMessage>();
+    private final BlockingQueue<SimpleMessage> messagesReceived = new LinkedBlockingQueue<SimpleMessage>();
+
 
     private SimpleMessage getMessage() throws Exception {
         SimpleMessage msg = null;
         try {
-            msg = mensagensRecebidas.poll(TIMEOUT, TimeUnit.MILLISECONDS);
+            msg = messagesReceived.poll(TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
         }
         if(msg == null) {
             throw new Exception("Timeout exception");
         }
         return msg;
+    }
+
+    public synchronized LoginResultMessage loginRequest(LoginMessage request) throws Exception {
+
+        LoginResultMessage response = null;
+
+        Channel _channel = getChannel();
+
+        if ((_channel != null) && (_channel.isActive())) {
+            _channel.writeAndFlush(request);
+            SimpleMessage simpleMessage = getMessage();
+
+            response = (LoginResultMessage) simpleMessage;
+
+            if (request.getUsn() != response.getUsn()) {
+                throw new Exception("Invalid response.");
+            }
+
+        } else {
+            throw new Exception("Client is disconnected.");
+        }
+
+        return response;
     }
 
     public Channel getChannel() {
@@ -49,8 +75,8 @@ public class ClientHandler extends SimpleChannelInboundHandler<SimpleMessage> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, SimpleMessage msg) throws Exception {
-        LOGGER.debug("Recebendo mensagem: {}", msg);
-        mensagensRecebidas.add(msg);
+        LOGGER.debug("Message received: {}", msg);
+        messagesReceived.add(msg);
     }
 
 

@@ -4,3 +4,4 @@
 */.settings
 */target
 /netty-server/logs
+/netty-client/logs

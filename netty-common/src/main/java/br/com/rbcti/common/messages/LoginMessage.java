@@ -118,4 +118,9 @@ public class LoginMessage implements SimpleMessage {
         return usn;
     }
 
+    @Override
+    public String toString() {
+        return "LoginMessage [user=" + user + ", password=******, usn=" + usn + "]";
+    }
+
 }

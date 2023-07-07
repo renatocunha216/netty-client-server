@@ -15,22 +15,23 @@ import br.com.rbcti.server.handlers.ServerHandler;
  */
 public class ServerChannelInitializer extends ChannelInitializer<SocketChannel> {
 
+    private static final int MAX_LENGTH_FRAME = 2 + 65535;
+
+    private static DecoderMessage DECODER = new DecoderMessage();
+    private static EncoderMessage ENCODER = new EncoderMessage();
+
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
-
-        // final int TIMEOUT = 10000; //seconds
-
-        final int MAX_LENGTH_FRAME = 2 + 65535;
 
         ChannelPipeline pipe = socketChannel.pipeline();
 
         // pipe.addLast("0", new CatchException());
         // pipe.addLast("1", new ReadTimeoutHandler(new HashedWheelTimer(), TIMEOUT));
         // pipe.addLast("0", new DebugReceive());
-        pipe.addLast("1", new LengthFieldBasedFrameDecoder(MAX_LENGTH_FRAME, 0, 2));
-        pipe.addLast("2", new DecoderMessage());
-        pipe.addLast("3", new EncoderMessage());
-        pipe.addLast("4", new ServerHandler());
+        pipe.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(MAX_LENGTH_FRAME, 0, 2));
+        pipe.addLast("decoderMessage", DECODER);
+        pipe.addLast("encoderMessage", ENCODER);
+        pipe.addLast("serverHandler", new ServerHandler());
     }
 
 }

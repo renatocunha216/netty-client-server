@@ -127,4 +127,9 @@ public class LoginResultMessage implements SimpleMessage {
         return ret;
     }
 
+    @Override
+    public String toString() {
+        return "LoginResultMessage [usn=" + usn + ", uuid=" + uuid + ", returnCode=" + returnCode + "]";
+    }
+
 }

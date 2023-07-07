@@ -4,6 +4,9 @@ package br.com.rbcti.client;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import br.com.rbcti.client.handlers.ClientHandler;
+import br.com.rbcti.common.messages.LoginMessage;
+import br.com.rbcti.common.messages.LoginResultMessage;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -12,10 +15,14 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+/**
+ *
+ * @author Renato Cunha
+ *
+ */
+public class NettyClientTest {
 
-public class NettyTestesClient {
-
-    private static final Logger LOGGER = LogManager.getLogger(NettyTestesClient.class);
+    private static final Logger LOGGER = LogManager.getLogger(NettyClientTest.class);
 
     private final int port;
     private String host;
@@ -23,12 +30,12 @@ public class NettyTestesClient {
     private Bootstrap bootstrap;
     EventLoopGroup workerGroup;
 
-    public NettyTestesClient(String host) {
+    public NettyClientTest(String host) {
         this.host = host;
         this.port = 10079;
     }
 
-    public NettyTestesClient(String host, int port) {
+    public NettyClientTest(String host, int port) {
         this.host = host;
         this.port = port;
     }
@@ -69,7 +76,6 @@ public class NettyTestesClient {
         this.channel = channel;
     }
 
-
     public synchronized void stop() {
         if (channel.isOpen()) {
             channel.close().awaitUninterruptibly();
@@ -78,34 +84,17 @@ public class NettyTestesClient {
         workerGroup.shutdownGracefully().awaitUninterruptibly(5000);
     }
 
-    public static void main(String[] args) {
+    public LoginResultMessage loginRequest(LoginMessage request) throws Exception {
 
-        NettyTestesClient client = new NettyTestesClient("127.0.0.1", 10079);
+        long startTime = System.currentTimeMillis();
+        ClientHandler clientHandler = (ClientHandler) getChannel().pipeline().get("clientHandler");
+        LoginResultMessage response = clientHandler.loginRequest(request);
+        long endTime = System.currentTimeMillis();
 
-        try {
-            long i = System.currentTimeMillis();
-            client.start();
-            System.out.println("Connected.");
-
-            // TODO:
-
-            long f = System.currentTimeMillis();
-
-            System.out.println("Tempo::" + (f-i));
-
-
-        } catch(Exception e) {
-            e.printStackTrace();
-
-        } finally {
-            try {
-                client.stop();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            //System.exit(1);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("{} message processing time {} ms", LoginMessage.class.getSimpleName(), Long.valueOf(endTime - startTime));
         }
-        System.out.println("End.");
+        return response;
     }
 
 }

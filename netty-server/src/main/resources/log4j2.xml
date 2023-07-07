@@ -27,9 +27,15 @@
 
         </RollingFile>
     </Appenders>
+
     <Loggers>
+        <Logger name="br.com.rbcti" level="trace" additivity="false">
+            <AppenderRef ref="fileLogger" />
+        </Logger>
+
         <Root level="info" additivity="false">
             <appender-ref ref="fileLogger" />
         </Root>
     </Loggers>
+
 </Configuration>
