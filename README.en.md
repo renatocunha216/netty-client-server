@@ -1,4 +1,6 @@
 # netty-client-server
+[![en](https://github.com/renatocunha216/common/blob/main/images/lang-en.svg?raw=true)](https://github.com/renatocunha216/netty-client-server/blob/main/README.en.md)
+[![pt-br](https://github.com/renatocunha216/common/blob/main/images/lang-pt-br.svg?raw=true)](https://github.com/renatocunha216/netty-client-server/blob/main/README.md)
 
 Example of using the [Netty](https://netty.io/) framework in a client server application with TCP protocol.
 
