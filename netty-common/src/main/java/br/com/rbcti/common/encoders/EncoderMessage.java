@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import br.com.rbcti.common.messages.SimpleMessage;
 import br.com.rbcti.common.util.ByteBufferWorker;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
@@ -16,6 +17,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * @author Renato Cunha
  *
  */
+@Sharable
 public class EncoderMessage extends MessageToByteEncoder<SimpleMessage> {
 
     private static final Logger LOGGER = LogManager.getLogger(EncoderMessage.class);

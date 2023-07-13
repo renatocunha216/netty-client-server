@@ -10,6 +10,7 @@ import br.com.rbcti.common.messages.MessageFactory;
 import br.com.rbcti.common.messages.SimpleMessage;
 import br.com.rbcti.common.util.ByteBufferWorker;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 
@@ -18,6 +19,7 @@ import io.netty.handler.codec.MessageToMessageDecoder;
  * @author Renato Cunha
  *
  */
+@Sharable
 public class DecoderMessage extends MessageToMessageDecoder<ByteBuf> {
 
     private static final Logger LOGGER = LogManager.getLogger(DecoderMessage.class);
