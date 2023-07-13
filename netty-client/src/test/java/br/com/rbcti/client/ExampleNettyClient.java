@@ -6,6 +6,11 @@ import org.apache.logging.log4j.Logger;
 import br.com.rbcti.common.messages.LoginMessage;
 import br.com.rbcti.common.messages.LoginResultMessage;
 
+/**
+ *
+ * @author Renato Cunha
+ *
+ */
 public class ExampleNettyClient {
 
     private static final Logger LOGGER = LogManager.getLogger(ExampleNettyClient.class);
@@ -31,6 +36,8 @@ public class ExampleNettyClient {
             } else {
                 LOGGER.info("Login failed.", result);
             }
+
+            Thread.sleep(20000);
 
 
         } catch(Exception e) {
