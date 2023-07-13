@@ -3,11 +3,16 @@ package br.com.rbcti.server;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ * @author Renato Cunha
+ *
+ */
 public class ServerManager {
 
     private static final ServerManager instance = new ServerManager();
     private final UserManager userManager = new UserManager();
-    private static final Map<String, Object>properties = new HashMap<String, Object>();
+    private static final Map<String, Object> properties = new HashMap<String, Object>();
 
     private ServerManager() {
     }

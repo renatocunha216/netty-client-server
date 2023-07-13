@@ -3,7 +3,9 @@ package br.com.rbcti.server.handlers;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserSession implements br.com.rbcti.common.Session {
+import br.com.rbcti.common.Session;
+
+public class UserSession implements Session {
 
     private Map<String, Object>properties;
 

@@ -4,7 +4,12 @@ import io.netty.channel.Channel;
 
 import java.io.Serializable;
 
-
+/**
+ * Stores logged-in user data.
+ *
+ * @author Renato Cunha
+ *
+ */
 public class User implements Serializable {
 
     private static final long serialVersionUID = -1516732029276485216L;

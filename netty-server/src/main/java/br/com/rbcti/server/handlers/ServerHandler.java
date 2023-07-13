@@ -7,11 +7,18 @@ import org.apache.logging.log4j.Logger;
 
 import br.com.rbcti.common.commands.Command;
 import br.com.rbcti.common.messages.SimpleMessage;
+import br.com.rbcti.server.ServerManager;
+import br.com.rbcti.server.UserManager;
 import br.com.rbcti.server.commands.CommandFactory;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.util.AttributeKey;
 
-
+/**
+ *
+ * @author Renato Cunha
+ *
+ */
 public class ServerHandler extends SimpleChannelInboundHandler<SimpleMessage> {
 
     private static final Logger LOGGER = LogManager.getLogger(ServerHandler.class);
@@ -21,11 +28,12 @@ public class ServerHandler extends SimpleChannelInboundHandler<SimpleMessage> {
 
         LOGGER.debug("Message received: {}", msg);
 
-        //Channel channel = ctx.channel();
+        UserSession userSession = (UserSession) ctx.channel().attr(AttributeKey.valueOf("userSession")).get();
 
         Command command = CommandFactory.getCommand(msg.getId());
+
         if (command != null) {
-            command.execute(ctx, null, msg);
+            command.execute(ctx, userSession, msg);
         }
     }
 
@@ -38,10 +46,16 @@ public class ServerHandler extends SimpleChannelInboundHandler<SimpleMessage> {
     }
 
 
-
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
+
+        UserManager userManager = ServerManager.getInstance().getUserManager();
+        userManager.removeUser(ctx.channel());
+
+        // Remove userSession
+        ctx.channel().attr(AttributeKey.valueOf("userSession")).set(null);
+
         SocketAddress address = ctx.channel().remoteAddress();
         LOGGER.info("Disconnected from {}.", address);
     }
