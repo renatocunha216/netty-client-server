@@ -25,6 +25,14 @@ public class ExampleNettyClient {
 
             LOGGER.info("::{}", result);
 
+            if (LoginResultMessage.LOGIN_OK == result.getReturnCode()) {
+                LOGGER.info("Successful login!", result);
+
+            } else {
+                LOGGER.info("Login failed.", result);
+            }
+
+
         } catch(Exception e) {
             e.printStackTrace();
 

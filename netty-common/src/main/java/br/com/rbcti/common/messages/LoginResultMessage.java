@@ -25,8 +25,8 @@ public class LoginResultMessage implements SimpleMessage {
     private static final int ID = Messages.LOGIN_RESULT;
     private static final short VERSION = 0x01;
 
-    public static final short OK = 0x01;
-    public static final short NAO_OK = 0x02;
+    public static final short LOGIN_OK = 0x01;
+    public static final short LOGIN_NOK = 0x02;
 
     private long usn;
     private String uuid;
