@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import br.com.rbcti.common.messages.LoginMessage;
 import br.com.rbcti.common.messages.LoginResultMessage;
+import br.com.rbcti.common.messages.LogoutMessage;
 import br.com.rbcti.common.messages.SimpleMessage;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -63,6 +64,18 @@ public class ClientHandler extends SimpleChannelInboundHandler<SimpleMessage> {
         }
 
         return response;
+    }
+
+    public synchronized void logoutRequest(LogoutMessage request) throws Exception {
+
+        Channel _channel = getChannel();
+
+        if ((_channel != null) && (_channel.isActive())) {
+            _channel.writeAndFlush(request);
+
+        } else {
+            throw new Exception("Client is disconnected.");
+        }
     }
 
     public Channel getChannel() {

@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import br.com.rbcti.common.messages.LoginMessage;
 import br.com.rbcti.common.messages.LoginResultMessage;
+import br.com.rbcti.common.messages.LogoutMessage;
 
 /**
  *
@@ -24,21 +25,25 @@ public class ExampleNettyClient {
             client.start();
             LOGGER.info("Connected.");
 
-            LoginMessage login = new LoginMessage("user1", "password#123", usn);
+            LoginMessage login = new LoginMessage("user1", "password#123", usn++);
 
             LoginResultMessage result = client.loginRequest(login);
 
             LOGGER.info("::{}", result);
 
             if (LoginResultMessage.LOGIN_OK == result.getReturnCode()) {
-                LOGGER.info("Successful login!", result);
+                LOGGER.info("Successful login! ", result);
 
             } else {
                 LOGGER.info("Login failed.", result);
             }
 
-            Thread.sleep(20000);
+            Thread.sleep(1000);
 
+            LOGGER.info("Logout request.");
+            client.logoutRequest(new LogoutMessage(usn++));
+
+            Thread.sleep(2000);
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -53,6 +58,5 @@ public class ExampleNettyClient {
 
         LOGGER.info("Finished example application.");
     }
-
 
 }

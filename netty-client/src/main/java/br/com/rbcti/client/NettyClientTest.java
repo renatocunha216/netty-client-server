@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import br.com.rbcti.client.handlers.ClientHandler;
 import br.com.rbcti.common.messages.LoginMessage;
 import br.com.rbcti.common.messages.LoginResultMessage;
+import br.com.rbcti.common.messages.LogoutMessage;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -95,6 +96,18 @@ public class NettyClientTest {
             LOGGER.debug("{} message processing time {} ms", LoginMessage.class.getSimpleName(), Long.valueOf(endTime - startTime));
         }
         return response;
+    }
+
+    public void logoutRequest(LogoutMessage request) throws Exception {
+
+        long startTime = System.currentTimeMillis();
+        ClientHandler clientHandler = (ClientHandler) getChannel().pipeline().get("clientHandler");
+        clientHandler.logoutRequest(request);
+        long endTime = System.currentTimeMillis();
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("{} message processing time {} ms", LogoutMessage.class.getSimpleName(), Long.valueOf(endTime - startTime));
+        }
     }
 
 }

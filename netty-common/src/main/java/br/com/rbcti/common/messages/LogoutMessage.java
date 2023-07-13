@@ -82,4 +82,9 @@ public class LogoutMessage implements SimpleMessage {
         return ret;
     }
 
+    @Override
+    public String toString() {
+        return "LogoutMessage [usn=" + usn + "]";
+    }
+
 }
