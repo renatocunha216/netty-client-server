@@ -10,7 +10,12 @@ import br.com.rbcti.common.commands.Command;
 import br.com.rbcti.common.messages.LoginMessage;
 import br.com.rbcti.common.messages.LoginResultMessage;
 import br.com.rbcti.common.messages.SimpleMessage;
-import io.netty.channel.ChannelHandlerContext;;
+import br.com.rbcti.server.ServerManager;
+import br.com.rbcti.server.User;
+import br.com.rbcti.server.UserManager;
+import br.com.rbcti.server.handlers.UserSession;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.AttributeKey;;
 
 /**
  *
@@ -20,7 +25,7 @@ import io.netty.channel.ChannelHandlerContext;;
 public class LoginCommand implements Command {
 
     @Override
-    public void execute(ChannelHandlerContext channel, Session session, SimpleMessage message) {
+    public void execute(ChannelHandlerContext ctx, Session session, SimpleMessage message) {
 
         SimpleMessage response = null;
 
@@ -28,7 +33,24 @@ public class LoginCommand implements Command {
 
         //TODO: calls business rules
         if ("user1".equals(loginMessage.getUser()) && "password#123".equals(loginMessage.getPassword())) {
-            response = new LoginResultMessage(LOGIN_OK, UUID.randomUUID().toString(), loginMessage.getUsn());
+
+            String uuid = UUID.randomUUID().toString();
+
+            User user = new User();
+            user.setName(loginMessage.getUser());
+            user.setUuid(uuid);
+            user.setChannel(ctx.channel());
+
+            UserManager userManager = ServerManager.getInstance().getUserManager();
+            userManager.addUser(user);
+
+            UserSession userSession = new UserSession();
+            userSession.addProperty("userData", user);
+            userSession.addProperty("lastAccess", Long.valueOf(System.currentTimeMillis()));
+
+            ctx.channel().attr(AttributeKey.valueOf("userSession")).set(userSession);
+
+            response = new LoginResultMessage(LOGIN_OK, uuid, loginMessage.getUsn());
 
         } else {
             response = new LoginResultMessage(LOGIN_NOK, null, loginMessage.getUsn());
@@ -39,7 +61,6 @@ public class LoginCommand implements Command {
             }
         }
 
-        channel.write(response);
-        channel.flush();
+        ctx.writeAndFlush(response);
     }
 }
