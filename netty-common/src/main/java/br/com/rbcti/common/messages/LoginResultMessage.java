@@ -10,7 +10,7 @@ import br.com.rbcti.common.util.ByteBufferWorker;
  * Message structure:<br>
  *
  * [len][id][version][code][uuid]<br>
- * [tam]           2 bytes - uint<br>
+ * [len]           2 bytes - uint<br>
  * [id]            2 bytes - uint<br>
  * [version]       1 bytes - uint<br>
  * [usn]           8 bytes - ulong (unique sequential number)<br>
