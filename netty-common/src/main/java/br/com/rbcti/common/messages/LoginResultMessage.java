@@ -98,6 +98,7 @@ public class LoginResultMessage implements SimpleMessage {
         return ID;
     }
 
+    @Override
     public long getUsn() {
         return usn;
     }

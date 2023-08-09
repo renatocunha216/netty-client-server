@@ -119,6 +119,7 @@ public class EndFileTransferMessage implements SimpleMessage {
         return ret;
     }
 
+    @Override
     public long getUsn() {
         return usn;
     }

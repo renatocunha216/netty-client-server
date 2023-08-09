@@ -103,6 +103,7 @@ public class StartFileTransferMessage implements SimpleMessage {
         return ret;
     }
 
+    @Override
     public long getUsn() {
         return usn;
     }

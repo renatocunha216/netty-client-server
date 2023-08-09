@@ -109,6 +109,7 @@ public class NackMessage implements SimpleMessage {
         return returnMessage;
     }
 
+    @Override
     public long getUsn() {
         return usn;
     }

@@ -56,6 +56,7 @@ public class LogoutMessage implements SimpleMessage {
         System.arraycopy(_data, 0, this.data, 0, _data.length);
     }
 
+    @Override
     public long getUsn() {
         return usn;
     }

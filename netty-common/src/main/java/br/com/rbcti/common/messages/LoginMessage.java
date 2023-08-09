@@ -114,6 +114,7 @@ public class LoginMessage implements SimpleMessage {
         return password;
     }
 
+    @Override
     public long getUsn() {
         return usn;
     }

@@ -123,6 +123,7 @@ public class FileTransferDataMessage implements SimpleMessage {
         return fileData;
     }
 
+    @Override
     public long getUsn() {
         return usn;
     }

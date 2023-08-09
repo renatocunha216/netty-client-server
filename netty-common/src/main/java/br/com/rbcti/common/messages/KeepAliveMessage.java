@@ -52,4 +52,10 @@ public class KeepAliveMessage implements SimpleMessage {
     }
 
 
+    @Override
+    public long getUsn() {
+        return 0;
+    }
+
+
 }

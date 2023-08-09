@@ -13,6 +13,12 @@ public interface SimpleMessage {
      *
      * @return
      */
+    public abstract long getUsn();
+
+    /**
+     *
+     * @return
+     */
     public abstract int getLength();
 
     /**
