@@ -1,11 +1,14 @@
 package br.com.rbcti.common.messages;
 
 import static br.com.rbcti.common.messages.Messages.ACK;
+import static br.com.rbcti.common.messages.Messages.END_FILE_TRANSFER;
+import static br.com.rbcti.common.messages.Messages.FILE_TRANSFER_DATA;
 import static br.com.rbcti.common.messages.Messages.KEPP_ALIVE;
 import static br.com.rbcti.common.messages.Messages.LOGIN;
 import static br.com.rbcti.common.messages.Messages.LOGIN_RESULT;
 import static br.com.rbcti.common.messages.Messages.LOGOUT;
 import static br.com.rbcti.common.messages.Messages.NACK;
+import static br.com.rbcti.common.messages.Messages.START_FILE_TRANSFER;
 
 import java.nio.ByteBuffer;
 
@@ -19,7 +22,7 @@ import br.com.rbcti.common.util.ByteBufferWorker;
  */
 public class MessageFactory {
 
-    public static final KeepAliveMessage KEPP_ALIVE_MESSAGE = new KeepAliveMessage();
+    public static final KeepAliveMessage KEEP_ALIVE_MESSAGE = new KeepAliveMessage();
 
     private MessageFactory() {
     }
@@ -32,32 +35,41 @@ public class MessageFactory {
 
         byte [] data = buffer.array();
 
-        SimpleMessage response = null;
+        SimpleMessage message = null;
 
         switch (id) {
             case KEPP_ALIVE: //KeepAlive
-                response = KEPP_ALIVE_MESSAGE;
+                message = KEEP_ALIVE_MESSAGE;
                 break;
             case ACK:
-                response = new AckMessage(data);
+                message = new AckMessage(data);
                 break;
             case NACK:
-                response = new NackMessage(data);
+                message = new NackMessage(data);
                 break;
             case LOGIN:
-                response = new LoginMessage(data);
+                message = new LoginMessage(data);
                 break;
             case LOGIN_RESULT:
-                response = new LoginResultMessage(data);
+                message = new LoginResultMessage(data);
                 break;
             case LOGOUT:
-                response = new LogoutMessage(data);
+                message = new LogoutMessage(data);
+                break;
+            case START_FILE_TRANSFER:
+                message = new StartFileTransferMessage(data);
+                break;
+            case FILE_TRANSFER_DATA:
+                message = new FileTransferDataMessage(data);
+                break;
+            case END_FILE_TRANSFER:
+                message = new EndFileTransferMessage(data);
                 break;
             default:
                  throw new IllegalArgumentException("Unknown message.");
         }
-        return response;
 
+        return message;
     }
 
     public static SimpleMessage getMessageInstance(byte [] buffer) {

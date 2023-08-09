@@ -2,6 +2,8 @@ package br.com.rbcti.common.messages;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Arrays;
+
 import org.testng.annotations.Test;
 
 /**
@@ -81,6 +83,74 @@ public class MessageFactoryTest {
 
         assertEquals(logoutMessage.getId(), Messages.LOGOUT);
         assertEquals(logoutMessage.getUsn(), 56256234L);
+    }
+
+    @Test
+    public void testStartFileTransferMessageFactory() {
+
+        System.out.println(getClass().getSimpleName() + ".testStartFileTransferMessageFactory");
+
+        byte[] startFileTransferData = new byte[] { (byte) 0x00, (byte) 0x14, // LENGTH
+                                      (byte) 0x00, (byte) 0x07,               // ID
+                                      (byte) 0x01,                            // VERSION
+                                      (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x92, (byte) 0x6a, // USN
+                                      (byte) 0x04, (byte) 0x66, (byte) 0x8b, (byte) 0x48,                 // FILE LENGTH
+                                      (byte) 0x61, (byte) 0x2e, (byte) 0x64, (byte) 0x61, (byte) 0x74 };  // FILE NAME
+
+        StartFileTransferMessage startFileTransferMessage = (StartFileTransferMessage) MessageFactory.getMessageInstance(startFileTransferData);
+
+        assertEquals(startFileTransferMessage.getId(), Messages.START_FILE_TRANSFER);
+        assertEquals(startFileTransferMessage.getUsn(), 37482L);
+        assertEquals(startFileTransferMessage.getFileLength(), 73829192);
+        assertEquals(startFileTransferMessage.getFileName(), "a.dat");
+    }
+
+    @Test
+    public void testFileTransferDataMessageFactory() {
+
+        System.out.println(getClass().getSimpleName() + ".testFileTransferDataMessageFactory");
+
+        byte[] fileTransferData = new byte[] { (byte) 0x00, (byte) 0x12, // LENGTH
+                                      (byte) 0x00, (byte) 0x08,               // ID
+                                      (byte) 0x01,                            // VERSION
+                                      (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x31, (byte) 0x52, (byte) 0x3a, (byte) 0xfa, // USN
+                                      (byte) 0x05,                                                      // FILE NAME LENGTH
+                                      (byte) 0x62, (byte) 0x2e, (byte) 0x64, (byte) 0x61, (byte) 0x74,  // FILE NAME
+                                      (byte) 0xf1 };                                                    // FILE DATA
+
+        FileTransferDataMessage fileTransferDataMessage = (FileTransferDataMessage) MessageFactory.getMessageInstance(fileTransferData);
+
+        assertEquals(fileTransferDataMessage.getId(), Messages.FILE_TRANSFER_DATA);
+        assertEquals(fileTransferDataMessage.getUsn(), 827472634L);
+        assertEquals(fileTransferDataMessage.getFileName(), "b.dat");
+        assertEquals(Arrays.equals(fileTransferDataMessage.getFileData(), new byte[] { (byte) 0xf1 }), true);
+    }
+
+    @Test
+    public void testEndFileTransferMessageFactory() {
+
+        System.out.println(getClass().getSimpleName() + ".testEndFileTransferMessageFactory");
+
+        byte[] endFileTransferData = new byte[] { (byte) 0x00, (byte) 0x24,   // LENGTH
+                                      (byte) 0x00, (byte) 0x09,               // ID
+                                      (byte) 0x01,                            // VERSION
+                                      (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x1a, (byte) 0x7f, (byte) 0x61, (byte) 0x92, // USN
+                                      (byte) 0xa1, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                                      (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                                      (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                                      (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0xa2,    // HASH
+                                      (byte) 0x63, (byte) 0x2e, (byte) 0x64, (byte) 0x61, (byte) 0x74 };  // FILE NAME
+
+        EndFileTransferMessage endFileTransferMessage = (EndFileTransferMessage) MessageFactory.getMessageInstance(endFileTransferData);
+
+        assertEquals(endFileTransferMessage.getId(), Messages.END_FILE_TRANSFER);
+        assertEquals(endFileTransferMessage.getUsn(), 444555666L);
+        assertEquals(endFileTransferMessage.getFileName(), "c.dat");
+
+        byte[] hashExpected = new byte[20];
+        hashExpected[0] = (byte) 0xa1;
+        hashExpected[19] = (byte) 0xa2;
+        assertEquals(Arrays.equals(endFileTransferMessage.getHash(), hashExpected), true);
     }
 
 }
