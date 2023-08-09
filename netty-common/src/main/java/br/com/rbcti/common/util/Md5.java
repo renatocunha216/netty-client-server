@@ -5,6 +5,11 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.codec.binary.Base64;
 
+/**
+ *
+ * @author Renato Cunha
+ *
+ */
 public class Md5 {
 
     private MessageDigest md = null;
@@ -26,7 +31,7 @@ public class Md5 {
     }
 
     public byte[] digest() {
-        if(!reseted) {
+        if (!reseted) {
             hash = md.digest();
             reseted = true;
         }
@@ -43,15 +48,7 @@ public class Md5 {
     }
 
     private String toHex(byte[] data) {
-        StringBuilder buffer = new StringBuilder();
-        for(byte b: data) {
-            String aux = Integer.toHexString(0xFF & b);
-            if ((aux.length() == 1)) {
-                buffer.append("0");
-            }
-            buffer.append(aux);
-        }
-        return buffer.toString();
+        return ByteUtil.encodeHex(data);
     }
 
     public String toBase64() {
