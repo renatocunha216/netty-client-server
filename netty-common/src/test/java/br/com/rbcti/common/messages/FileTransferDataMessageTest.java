@@ -1,6 +1,7 @@
 package br.com.rbcti.common.messages;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertThrows;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -107,6 +108,41 @@ public class FileTransferDataMessageTest {
         assertEquals(fileTransferDataMessage2.getFileName(), bigFileName);
         assertEquals(fileTransferDataMessage2.getUsn(), USN);
         assertEquals(Arrays.equals(fileTransferDataMessage2.getFileData(), fileData), true);
+    }
+
+
+    @Test
+    public void testConstructorThrowException() {
+
+        System.out.println(getClass().getSimpleName() + ".testConstructorThrowException");
+
+        String longFileName = "longFileName_" + StringUtils.leftPad("1", 243, "0");
+
+        FileTransferDataMessage fileTransferDataMessage = new FileTransferDataMessage(1L, "events-2023-08-08-153335.dat", new byte[200]);
+        byte[] fileTransferData = fileTransferDataMessage.getData();
+
+        byte[] invalidLength = new byte[fileTransferData.length];
+        byte[] invalidId = new byte[fileTransferData.length];
+        byte[] invalidVersion = new byte[fileTransferData.length];
+
+        System.arraycopy(fileTransferData, 0, invalidLength, 0, fileTransferData.length);
+        System.arraycopy(fileTransferData, 0, invalidId, 0, fileTransferData.length);
+        System.arraycopy(fileTransferData, 0, invalidVersion, 0, fileTransferData.length);
+
+        invalidLength[0] = 0x00;
+        invalidLength[1] = 0x01;
+
+        invalidId[2] = 0x00;
+        invalidId[3] = 0x00;
+
+        invalidVersion[4] = 0x07;
+
+        assertThrows(IllegalArgumentException.class, () -> new FileTransferDataMessage(invalidLength));
+        assertThrows(IllegalArgumentException.class, () -> new FileTransferDataMessage(invalidId));
+        assertThrows(IllegalArgumentException.class, () -> new FileTransferDataMessage(invalidVersion));
+
+        assertThrows(IllegalArgumentException.class, () -> new FileTransferDataMessage(1L, longFileName, new byte[100]));
+        assertThrows(IllegalArgumentException.class, () -> new FileTransferDataMessage(1L, "events-2023-08-08-154016.dat", new byte[65535]));
     }
 
 }

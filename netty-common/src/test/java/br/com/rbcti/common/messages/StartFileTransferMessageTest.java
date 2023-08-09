@@ -63,6 +63,8 @@ public class StartFileTransferMessageTest {
     @Test
     public void testConstructorThrowException() {
 
+        System.out.println(getClass().getSimpleName() + ".testConstructorThrowException");
+
         StartFileTransferMessage startFileTransferMessage = new StartFileTransferMessage(1L, 1024, "events-2023-08-07-113101.dat");
         byte[] startFileTransferData = startFileTransferMessage.getData();
 

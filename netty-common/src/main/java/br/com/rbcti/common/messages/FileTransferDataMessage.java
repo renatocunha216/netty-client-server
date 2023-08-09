@@ -15,8 +15,8 @@ import br.com.rbcti.common.util.ByteBufferWorker;
  * [version]         1 bytes - uint<br>
  * [usn]             8 bytes - ulong (unique sequential number)<br>
  * [fileNameLength]  1 bytes - uint<br>
- * [fileName]        n bytes - uint<br>
- * [fileData]        n bytes - string ascii
+ * [fileName]        n bytes - string ascii<br>
+ * [fileData]        n bytes - raw data
  *
  * @author Renato Cunha
  * @see StartFileTransferMessage
@@ -38,7 +38,7 @@ public class FileTransferDataMessage implements SimpleMessage {
     private byte[] fileData;
     private byte[] data;
 
-    public FileTransferDataMessage(long _usn, String _fileName,  byte[] _data) {
+    public FileTransferDataMessage(long _usn, String _fileName,  byte[] _fileData) {
 
         byte[] bytesFileName = _fileName.getBytes(Charset.forName("US-ASCII"));
 
@@ -46,11 +46,11 @@ public class FileTransferDataMessage implements SimpleMessage {
             throw new IllegalArgumentException("max file name length is 255");
         }
 
-        if (_data.length > (MAX_MESSAGE_LENGTH - HEADER_LENGTH - LENGTH_FIELD_FILE_LENGTH + 2)) {
+        if (_fileData.length > (MAX_MESSAGE_LENGTH - HEADER_LENGTH - LENGTH_FIELD_FILE_LENGTH + 2)) {
             throw new IllegalArgumentException("maximum data size exceeded");
         }
 
-        int dataLen = HEADER_LENGTH + LENGTH_FIELD_FILE_LENGTH + bytesFileName.length + _data.length;
+        int dataLen = HEADER_LENGTH + LENGTH_FIELD_FILE_LENGTH + bytesFileName.length + _fileData.length;
 
         ByteBuffer buffer = ByteBuffer.allocate(dataLen);
 
@@ -61,13 +61,13 @@ public class FileTransferDataMessage implements SimpleMessage {
 
         ByteBufferWorker.putUnsignedByte(buffer, bytesFileName.length);
         buffer.put(bytesFileName);
-        buffer.put(_data);
+        buffer.put(_fileData);
 
         this.data = buffer.array();
 
         this.usn = _usn;
         this.fileName = _fileName;
-        this.fileData = _data;
+        this.fileData = _fileData;
     }
 
     public FileTransferDataMessage(byte[] _data) {
