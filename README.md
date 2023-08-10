@@ -30,20 +30,40 @@ O código abaixo executa um aplicativo cliente do servidor **NettyServerTest** e
 ```java
     ExampleNettyClient.java
     
+    private static final Logger LOGGER = LogManager.getLogger(ExampleNettyClient.class);
+    private static long usn = 1;
+
     public static void main(String[] args) {
-        
-        long usn = 1;
 
         NettyClientTest client = new NettyClientTest("127.0.0.1", 10079);
 
         try {
             client.start();
-            System.out.println("Connected.");
+            LOGGER.info("Connected.");
 
-            LoginMessage login = new LoginMessage("user1", "password#123", usn);
+            LoginMessage login = new LoginMessage("user1", "password#123", usn++);
+
             LoginResultMessage result = client.loginRequest(login);
 
-            System.out.println("result = " + result);
+            LOGGER.info("::{}", result);
+
+            if (LoginResultMessage.LOGIN_OK == result.getReturnCode()) {
+                LOGGER.info("Successful login! ", result);
+
+                LOGGER.info("Sending a file to the server.");
+                client.sendFile("c:\\temp\\data.rar", usn++);
+                //client.sendFile("c:\\temp\\cnh.pdf", usn++);
+
+            } else {
+                LOGGER.info("Login failed.", result);
+            }
+
+            Thread.sleep(1000);
+
+            LOGGER.info("Logout request.");
+            client.logoutRequest(new LogoutMessage(usn++));
+
+            Thread.sleep(2000);
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -56,6 +76,6 @@ O código abaixo executa um aplicativo cliente do servidor **NettyServerTest** e
             }
         }
 
-        System.out.println("Finished example application.");
+        LOGGER.info("Finished example application.");
     }
 ```
