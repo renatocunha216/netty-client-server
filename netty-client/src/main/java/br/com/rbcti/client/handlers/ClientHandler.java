@@ -50,8 +50,17 @@ public class ClientHandler extends SimpleChannelInboundHandler<SimpleMessage> {
             msg = messagesReceived.poll(TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
         }
-        if(msg == null) {
+
+        if (msg == null) {
             throw new Exception("Timeout exception");
+        }
+        return msg;
+    }
+
+    private SimpleMessage getMessageAndCheck(long usn) throws Exception {
+        SimpleMessage msg = getMessage();
+        if (usn != msg.getUsn()) {
+            throw new Exception("Invalid response");
         }
         return msg;
     }
@@ -64,13 +73,9 @@ public class ClientHandler extends SimpleChannelInboundHandler<SimpleMessage> {
 
         if ((_channel != null) && (_channel.isActive())) {
             _channel.writeAndFlush(request);
-            SimpleMessage simpleMessage = getMessage();
+            SimpleMessage simpleMessage = getMessageAndCheck(request.getUsn());
 
             response = (LoginResultMessage) simpleMessage;
-
-            if (request.getUsn() != response.getUsn()) {
-                throw new Exception("Invalid response.");
-            }
 
         } else {
             throw new Exception("Client is disconnected.");
@@ -114,30 +119,34 @@ public class ClientHandler extends SimpleChannelInboundHandler<SimpleMessage> {
 
             if (slices.size() > 0) {
 
-                StartFileTransferMessage startRequest = new StartFileTransferMessage(usn++, (int) size, fileName);
+                StartFileTransferMessage startRequest = new StartFileTransferMessage(usn, (int) size, fileName);
                 _channel.writeAndFlush(startRequest);
 
-                if (getMessage().getId() != Messages.ACK) {
+                if (getMessageAndCheck(usn).getId() != Messages.ACK) {
                     throw new Exception("Error starting transfer.");
                 }
+
+                usn++;
 
                 Sha1 sha1 = new Sha1();
 
                 for (byte[] slice : slices) {
-                    FileTransferDataMessage fileTransferDataMessage = new FileTransferDataMessage(usn++, fileName, slice);
+                    FileTransferDataMessage fileTransferDataMessage = new FileTransferDataMessage(usn, fileName, slice);
                     _channel.writeAndFlush(fileTransferDataMessage);
 
-                    if (getMessage().getId() != Messages.ACK) {
+                    if (getMessageAndCheck(usn).getId() != Messages.ACK) {
                         throw new Exception("File transfer error.");
                     }
+
+                    usn++;
 
                     sha1.update(slice);
                 }
 
-                EndFileTransferMessage endFileTransferMessage = new EndFileTransferMessage(usn++, fileName, sha1.digest());
+                EndFileTransferMessage endFileTransferMessage = new EndFileTransferMessage(usn, fileName, sha1.digest());
                 _channel.writeAndFlush(endFileTransferMessage);
 
-                if (getMessage().getId() != Messages.ACK) {
+                if (getMessageAndCheck(usn).getId() != Messages.ACK) {
                     throw new Exception("Error at the end of file transfer.");
                 }
             }
@@ -172,7 +181,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<SimpleMessage> {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        // TODO Auto-generated method stub
         super.channelInactive(ctx);
     }
 
