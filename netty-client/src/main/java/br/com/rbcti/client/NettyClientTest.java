@@ -31,7 +31,7 @@ public class NettyClientTest {
     private String host;
     private Channel channel;
     private Bootstrap bootstrap;
-    EventLoopGroup workerGroup;
+    private EventLoopGroup workerGroup;
 
     public NettyClientTest(String host) {
         this.host = host;
