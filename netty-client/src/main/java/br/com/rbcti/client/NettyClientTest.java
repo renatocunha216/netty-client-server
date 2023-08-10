@@ -110,4 +110,17 @@ public class NettyClientTest {
         }
     }
 
+    public void sendFile(String filePath, long usn) throws Exception {
+
+        long startTime = System.currentTimeMillis();
+        ClientHandler clientHandler = (ClientHandler) getChannel().pipeline().get("clientHandler");
+        clientHandler.sendFile(filePath, usn);
+        long endTime = System.currentTimeMillis();
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("SendFile message processing time {} ms", Long.valueOf(endTime - startTime));
+        }
+        LOGGER.info("SendFile message processing time {} ms", Long.valueOf(endTime - startTime));
+    }
+
 }

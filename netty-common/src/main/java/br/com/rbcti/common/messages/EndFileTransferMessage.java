@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 import br.com.rbcti.common.util.ByteBufferWorker;
+import br.com.rbcti.common.util.ByteUtil;
 
 /**
  *
@@ -130,6 +131,11 @@ public class EndFileTransferMessage implements SimpleMessage {
 
     public byte[] getHash() {
         return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "EndFileTransferMessage [id=" + getId() + ", version=" + getVersion() + ", usn=" + usn + ", hash=" + ByteUtil.encodeHex(hash) + ", fileName=" + fileName + "]";
     }
 
 }

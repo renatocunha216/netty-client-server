@@ -118,7 +118,7 @@ public class StartFileTransferMessage implements SimpleMessage {
 
     @Override
     public String toString() {
-        return "StartFileTransferMessage [usn=" + usn + ", fileLength=" + fileLength + ", fileName=" + fileName + "]";
+        return "StartFileTransferMessage [id=" + getId() + ", version=" + getVersion() + ", usn=" + usn + ", fileLength=" + fileLength + ", fileName=" + fileName + "]";
     }
 
 }

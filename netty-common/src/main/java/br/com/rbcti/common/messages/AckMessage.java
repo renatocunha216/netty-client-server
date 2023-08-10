@@ -83,4 +83,9 @@ public class AckMessage implements SimpleMessage {
         return VERSION;
     }
 
+    @Override
+    public String toString() {
+        return "AckMessage [id=" + getId() + ", version=" + getVersion() + ", usn=" + this.usn + "]";
+    }
+
 }

@@ -34,6 +34,10 @@ public class ExampleNettyClient {
             if (LoginResultMessage.LOGIN_OK == result.getReturnCode()) {
                 LOGGER.info("Successful login! ", result);
 
+                LOGGER.info("Sending a file to the server.");
+                client.sendFile("c:\\temp\\data.rar", usn++);
+                //client.sendFile("c:\\temp\\cnh.pdf", usn++);
+
             } else {
                 LOGGER.info("Login failed.", result);
             }

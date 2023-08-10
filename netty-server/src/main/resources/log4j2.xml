@@ -29,7 +29,7 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="br.com.rbcti" level="debug" additivity="false">
+        <Logger name="br.com.rbcti" level="info" additivity="false">
             <AppenderRef ref="fileLogger" />
         </Logger>
 

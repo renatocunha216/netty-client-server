@@ -82,6 +82,7 @@ public class NettyServerTest {
 
         try {
             server.start();
+
         } catch (Exception e) {
             LOGGER.error("Erro: {}", e.getMessage());
         }

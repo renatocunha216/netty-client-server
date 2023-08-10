@@ -132,4 +132,9 @@ public class FileTransferDataMessage implements SimpleMessage {
         return fileName;
     }
 
+    @Override
+    public String toString() {
+        return "FileTransferDataMessage [id=" + getId() + ", version=" + getVersion() + ", usn=" + usn + ", fileName=" + fileName + "]";
+    }
+
 }
