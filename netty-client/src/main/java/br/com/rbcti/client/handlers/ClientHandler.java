@@ -190,8 +190,9 @@ public class ClientHandler extends SimpleChannelInboundHandler<SimpleMessage> {
     }
 
     /**
-     *
-     *
+     * Reads the file and stores it in memory in slices.<br>
+     * Do not use for large files.
+     *      
      * @param fileName
      * @param length
      * @return
