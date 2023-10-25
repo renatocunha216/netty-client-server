@@ -78,3 +78,6 @@ The code below runs a client application on the **NettyServerTest** server and s
         LOGGER.info("Finished example application.");
     }
 ```
+<br>
+
+See another example of using Netty with FlatBuffers in the [netty-article-publisher](https://github.com/renatocunha216/netty-article-publisher) project.
