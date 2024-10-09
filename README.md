@@ -87,4 +87,16 @@ O código abaixo executa um aplicativo cliente do servidor **NettyServerTest** e
 Integração com os frameworks Spring e MyBatis.<br>
 
 
+### Banco de Dados 
+
+```
+  CREATE TABLE "T_USER"
+   (    "USER_ID" NUMBER(19,0) NOT NULL ENABLE,
+        "NAME" VARCHAR2(80 BYTE) NOT NULL ENABLE,
+        "PASSWORD" VARCHAR2(80 BYTE) NOT NULL ENABLE,
+        CONSTRAINT "T_USER_PK" PRIMARY KEY ("USER_ID")
+   );
+```
+
+
 Veja outro exemplo do uso do Netty com o FlatBuffers no projeto [netty-article-publisher](https://github.com/renatocunha216/netty-article-publisher).
