@@ -80,4 +80,9 @@ The code below runs a client application on the **NettyServerTest** server and s
 ```
 <br>
 
+### Branches
+
+- **[netty-client-server-spring-mybatis](https://github.com/renatocunha216/netty-client-server/tree/netty-client-server-spring-mybatis)**<br>
+Integration with Spring and MyBatis frameworks..<br>
+
 See another example of using Netty with FlatBuffers in the [netty-article-publisher](https://github.com/renatocunha216/netty-article-publisher) project.
