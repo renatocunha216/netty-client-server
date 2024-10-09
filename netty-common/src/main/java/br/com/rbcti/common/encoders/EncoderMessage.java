@@ -29,7 +29,7 @@ public class EncoderMessage extends MessageToByteEncoder<SimpleMessage> {
             synchronized (EncoderMessage.class) {
                 LOGGER.debug("Sending message: {}", msg);
                 if (LOGGER.isTraceEnabled()) {
-                    LOGGER.trace("Sending data: {}", ByteBufferWorker.getDumpString(ByteBuffer.wrap(msg.getData())));
+                    LOGGER.trace("Sending data:{}{}", System.lineSeparator(), ByteBufferWorker.getDumpString(ByteBuffer.wrap(msg.getData())));
                 }
             }
         }
