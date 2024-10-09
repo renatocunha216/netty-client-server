@@ -31,7 +31,7 @@ public class DecoderMessage extends MessageToMessageDecoder<ByteBuf> {
         msg.readBytes(readables);
 
         if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace("Data received: {}", ByteBufferWorker.getDumpString(ByteBuffer.wrap(readables)));
+            LOGGER.trace("Data received:{}{}", System.lineSeparator(), ByteBufferWorker.getDumpString(ByteBuffer.wrap(readables)));
         }
 
         SimpleMessage simpleMessage = MessageFactory.getMessageInstance(readables);
