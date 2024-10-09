@@ -72,7 +72,7 @@ public class NettyServerTest {
             if (args.length > 0) {
                 portNumber = Integer.valueOf(args[0]);
             }
-            LOGGER.info("TCP port number parameter: {}", portNumber);
+            LOGGER.debug("TCP port number parameter: {}", portNumber);
 
         } catch (Exception e) {
             LOGGER.warn("Invalid TCP port number parameter.", e);
@@ -85,6 +85,7 @@ public class NettyServerTest {
 
         } catch (Exception e) {
             LOGGER.error("Erro: {}", e.getMessage());
+            System.exit(1);
         }
 
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {

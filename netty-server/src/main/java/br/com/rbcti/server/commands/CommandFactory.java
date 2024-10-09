@@ -5,6 +5,7 @@ import java.util.Map;
 
 import br.com.rbcti.common.commands.Command;
 import br.com.rbcti.common.messages.Messages;
+import br.com.rbcti.server.ServerManager;
 
 /**
  *
@@ -24,7 +25,10 @@ public class CommandFactory {
         registeredCommands.put(Integer.valueOf(Messages.FILE_TRANSFER_DATA), receiveFileCommand);
         registeredCommands.put(Integer.valueOf(Messages.END_FILE_TRANSFER), receiveFileCommand);
 
-        registeredCommands.put(Integer.valueOf(Messages.LOGIN), new LoginCommand());
+        //"loginCommand"
+        //LoginCommand.class
+        //registeredCommands.put(Integer.valueOf(Messages.LOGIN), new LoginCommand());
+        registeredCommands.put(Integer.valueOf(Messages.LOGIN), ServerManager.context.getBean("loginCommand", LoginCommand.class));
         registeredCommands.put(Integer.valueOf(Messages.LOGOUT), new LogoutCommand());
     }
 

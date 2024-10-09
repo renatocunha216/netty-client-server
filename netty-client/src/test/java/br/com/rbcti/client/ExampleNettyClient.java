@@ -35,7 +35,7 @@ public class ExampleNettyClient {
                 LOGGER.info("Successful login! ", result);
 
                 LOGGER.info("Sending a file to the server.");
-                client.sendFile("c:\\temp\\data.rar", usn++);
+                //client.sendFile("c:\\temp\\data.rar", usn++);
                 //client.sendFile("c:\\temp\\cnh.pdf", usn++);
 
             } else {

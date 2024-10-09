@@ -5,15 +5,20 @@ import static br.com.rbcti.common.messages.LoginResultMessage.LOGIN_OK;
 
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import br.com.rbcti.common.Session;
 import br.com.rbcti.common.commands.Command;
 import br.com.rbcti.common.messages.LoginMessage;
 import br.com.rbcti.common.messages.LoginResultMessage;
 import br.com.rbcti.common.messages.SimpleMessage;
+import br.com.rbcti.server.NettyServerTest;
 import br.com.rbcti.server.ServerManager;
 import br.com.rbcti.server.User;
 import br.com.rbcti.server.UserManager;
 import br.com.rbcti.server.handlers.UserSession;
+import br.com.rbcti.server.services.UserService;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AttributeKey;;
 
@@ -24,6 +29,10 @@ import io.netty.util.AttributeKey;;
  */
 public class LoginCommand implements Command {
 
+    private static final Logger LOGGER = LogManager.getLogger(NettyServerTest.class);
+
+    private UserService userService;
+
     @Override
     public void execute(ChannelHandlerContext ctx, Session session, SimpleMessage message) {
 
@@ -31,13 +40,22 @@ public class LoginCommand implements Command {
 
         LoginMessage loginMessage = (LoginMessage) message;
 
+        br.com.rbcti.common.model.User _user = null;
+        try {
+            _user = userService.selectUser(loginMessage.getUser());
+            LOGGER.debug("::" + _user);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         //TODO: calls business rules
-        if ("user1".equals(loginMessage.getUser()) && "password#123".equals(loginMessage.getPassword())) {
+        if (_user != null &&  _user.getPassword().equals(loginMessage.getPassword())) {
 
             String uuid = UUID.randomUUID().toString();
 
             User user = new User();
-            user.setName(loginMessage.getUser());
+            user.setName(_user.getName());
             user.setUuid(uuid);
             user.setChannel(ctx.channel());
 
@@ -63,4 +81,13 @@ public class LoginCommand implements Command {
 
         ctx.writeAndFlush(response);
     }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
 }

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Configuration status="debug">
+<Configuration status="warn">
     <Properties>
         <Property name="basePath">./logs</Property>
     </Properties>
 
     <Appenders>
+
+        <Console name="console"
+                 target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
         <RollingFile name="fileLogger" fileName="${basePath}/server.log" filePattern="${basePath}/%d{yyyy-MM-dd}_server.log">
             <PatternLayout>
                 <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
@@ -29,12 +35,21 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="br.com.rbcti" level="info" additivity="false">
+
+        <!-- MyBatis mapper log config -->
+        <Logger name="User" level="trace" additivity="false">
             <AppenderRef ref="fileLogger" />
+            <AppenderRef ref="console" />
+        </Logger>
+
+        <Logger name="br.com.rbcti" level="trace" additivity="false">
+            <AppenderRef ref="fileLogger" />
+            <AppenderRef ref="console" />
         </Logger>
 
         <Root level="info" additivity="false">
             <appender-ref ref="fileLogger" />
+            <AppenderRef ref="console" />
         </Root>
     </Loggers>
 
