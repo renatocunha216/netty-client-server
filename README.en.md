@@ -1,6 +1,6 @@
 # netty-client-server
-[![en](https://github.com/renatocunha216/common/blob/main/images/lang-en.svg?raw=true)](https://github.com/renatocunha216/netty-client-server/blob/main/README.en.md)
-[![pt-br](https://github.com/renatocunha216/common/blob/main/images/lang-pt-br.svg?raw=true)](https://github.com/renatocunha216/netty-client-server/blob/main/README.md)
+[![en](https://github.com/renatocunha216/common/blob/main/images/lang-en.svg?raw=true)](https://github.com/renatocunha216/netty-client-server/blob/netty-client-server-spring-mybatis/README.en.md)
+[![pt-br](https://github.com/renatocunha216/common/blob/main/images/lang-pt-br.svg?raw=true)](https://github.com/renatocunha216/netty-client-server/blob/netty-client-server-spring-mybatis/README.md)
 
 Example of using the [Netty](https://netty.io/) framework in a client server application with TCP protocol.
 
@@ -79,5 +79,24 @@ The code below runs a client application on the **NettyServerTest** server and s
     }
 ```
 <br>
+
+### Branches
+
+- **[netty-client-server-spring-mybatis](https://github.com/renatocunha216/netty-client-server/tree/netty-client-server-spring-mybatis)**<br>
+Integration with Spring and MyBatis frameworks.<br>
+
+
+
+### Banco de Dados 
+
+```
+  CREATE TABLE "T_USER"
+   (    "USER_ID" NUMBER(19,0) NOT NULL ENABLE,
+        "NAME" VARCHAR2(80 BYTE) NOT NULL ENABLE,
+        "PASSWORD" VARCHAR2(80 BYTE) NOT NULL ENABLE,
+        CONSTRAINT "T_USER_PK" PRIMARY KEY ("USER_ID")
+   );
+```
+
 
 See another example of using Netty with FlatBuffers in the [netty-article-publisher](https://github.com/renatocunha216/netty-article-publisher) project.

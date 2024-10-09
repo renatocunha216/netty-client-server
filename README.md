@@ -1,6 +1,6 @@
 # netty-client-server
-[![en](https://github.com/renatocunha216/common/blob/main/images/lang-en.svg?raw=true)](https://github.com/renatocunha216/netty-client-server/blob/main/README.en.md)
-[![pt-br](https://github.com/renatocunha216/common/blob/main/images/lang-pt-br.svg?raw=true)](https://github.com/renatocunha216/netty-client-server/blob/main/README.md)
+[![en](https://github.com/renatocunha216/common/blob/main/images/lang-en.svg?raw=true)](https://github.com/renatocunha216/netty-client-server/blob/netty-client-server-spring-mybatis/README.en.md)
+[![pt-br](https://github.com/renatocunha216/common/blob/main/images/lang-pt-br.svg?raw=true)](https://github.com/renatocunha216/netty-client-server/blob/netty-client-server-spring-mybatis/README.md)
 
 Exemplo de uso do framework [Netty](https://netty.io/) em uma aplicação cliente servidor com o protocolo TCP.
 
