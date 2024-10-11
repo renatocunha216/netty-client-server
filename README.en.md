@@ -29,7 +29,7 @@ The code below runs a client application on the **NettyServerTest** server and s
 ```java
     ExampleNettyClient.java
     
-    private static final Logger LOGGER = LogManager.getLogger(ExampleNettyClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExampleNettyClient.class);
     private static long usn = 1;
 
     public static void main(String[] args) {

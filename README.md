@@ -30,7 +30,7 @@ O código abaixo executa um aplicativo cliente do servidor **NettyServerTest** e
 ```java
     ExampleNettyClient.java
     
-    private static final Logger LOGGER = LogManager.getLogger(ExampleNettyClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExampleNettyClient.class);
     private static long usn = 1;
 
     public static void main(String[] args) {
