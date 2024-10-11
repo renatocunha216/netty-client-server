@@ -2,8 +2,8 @@ package br.com.rbcti.common.encoders;
 
 import java.nio.ByteBuffer;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.rbcti.common.messages.SimpleMessage;
 import br.com.rbcti.common.util.ByteBufferWorker;
@@ -20,7 +20,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 @Sharable
 public class EncoderMessage extends MessageToByteEncoder<SimpleMessage> {
 
-    private static final Logger LOGGER = LogManager.getLogger(EncoderMessage.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EncoderMessage.class);
 
     @Override
     protected void encode(ChannelHandlerContext ctx, SimpleMessage msg, ByteBuf out) throws Exception {

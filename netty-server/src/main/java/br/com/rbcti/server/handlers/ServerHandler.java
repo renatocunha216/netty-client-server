@@ -2,8 +2,8 @@ package br.com.rbcti.server.handlers;
 
 import java.net.SocketAddress;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.rbcti.common.commands.Command;
 import br.com.rbcti.common.messages.SimpleMessage;
@@ -21,7 +21,7 @@ import io.netty.util.AttributeKey;
  */
 public class ServerHandler extends SimpleChannelInboundHandler<SimpleMessage> {
 
-    private static final Logger LOGGER = LogManager.getLogger(ServerHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServerHandler.class);
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, SimpleMessage msg) throws Exception {

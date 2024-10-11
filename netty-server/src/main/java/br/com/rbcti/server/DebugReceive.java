@@ -3,8 +3,8 @@ package br.com.rbcti.server;
 import java.nio.ByteBuffer;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.rbcti.common.util.ByteBufferWorker;
 import io.netty.buffer.ByteBuf;
@@ -18,7 +18,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
  */
 public class DebugReceive extends ByteToMessageDecoder {
 
-    private static final Logger LOGGER = LogManager.getLogger(DebugReceive.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DebugReceive.class);
 
     @Override
     protected void decode(ChannelHandlerContext paramChannelHandlerContext, ByteBuf paramByteBuf, List<Object> paramList) throws Exception {

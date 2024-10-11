@@ -1,8 +1,8 @@
 package br.com.rbcti.client;
 
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.rbcti.client.handlers.ClientHandler;
 import br.com.rbcti.common.messages.LoginMessage;
@@ -25,7 +25,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
  */
 public class NettyClientTest {
 
-    private static final Logger LOGGER = LogManager.getLogger(NettyClientTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NettyClientTest.class);
 
     private final int port;
     private String host;
