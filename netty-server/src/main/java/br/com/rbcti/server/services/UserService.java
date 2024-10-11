@@ -2,8 +2,8 @@ package br.com.rbcti.server.services;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.rbcti.common.model.User;
 import br.com.rbcti.server.dao.UserDAO;
@@ -11,7 +11,7 @@ import br.com.rbcti.server.dao.UserDAO;
 // @Service
 public class UserService {
 
-    private static final Logger LOGGER = LogManager.getLogger(UserService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     private UserDAO userDAO;
 

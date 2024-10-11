@@ -1,7 +1,7 @@
 package br.com.rbcti.client;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.rbcti.common.messages.LoginMessage;
 import br.com.rbcti.common.messages.LoginResultMessage;
@@ -14,7 +14,7 @@ import br.com.rbcti.common.messages.LogoutMessage;
  */
 public class ExampleNettyClient {
 
-    private static final Logger LOGGER = LogManager.getLogger(ExampleNettyClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExampleNettyClient.class);
     private static long usn = 1;
 
     public static void main(String[] args) {

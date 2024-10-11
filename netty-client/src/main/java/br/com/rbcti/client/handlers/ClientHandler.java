@@ -12,8 +12,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.com.rbcti.common.messages.EndFileTransferMessage;
 import br.com.rbcti.common.messages.FileTransferDataMessage;
@@ -38,7 +38,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<SimpleMessage> {
 
     private static final long TIMEOUT = 1000L * 10;
 
-    private static final Logger LOGGER = LogManager.getLogger(ClientHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientHandler.class);
 
     private volatile Channel channel;
     private final BlockingQueue<SimpleMessage> messagesReceived = new LinkedBlockingQueue<SimpleMessage>();
@@ -192,7 +192,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<SimpleMessage> {
     /**
      * Reads the file and stores it in memory in slices.<br>
      * Do not use for large files.
-     *      
+     *
      * @param fileName
      * @param length
      * @return
