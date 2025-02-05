@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
  */
 public class KeepAliveMessage implements SimpleMessage {
 
-    private static final int ID = Messages.KEPP_ALIVE;
+    private static final int ID = Messages.KEEP_ALIVE;
     private static final short VERSION = 0x01;
 
     private byte[] data;

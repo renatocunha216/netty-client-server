@@ -8,7 +8,7 @@ package br.com.rbcti.common.messages;
  */
 public final class Messages {
 
-    public static final int KEPP_ALIVE = 0x0001;
+    public static final int KEEP_ALIVE = 0x0001;
     public static final int ACK = 0x0002;
     public static final int NACK = 0x0003;
 
