@@ -3,7 +3,7 @@ package br.com.rbcti.common.messages;
 import static br.com.rbcti.common.messages.Messages.ACK;
 import static br.com.rbcti.common.messages.Messages.END_FILE_TRANSFER;
 import static br.com.rbcti.common.messages.Messages.FILE_TRANSFER_DATA;
-import static br.com.rbcti.common.messages.Messages.KEPP_ALIVE;
+import static br.com.rbcti.common.messages.Messages.KEEP_ALIVE;
 import static br.com.rbcti.common.messages.Messages.LOGIN;
 import static br.com.rbcti.common.messages.Messages.LOGIN_RESULT;
 import static br.com.rbcti.common.messages.Messages.LOGOUT;
@@ -38,7 +38,7 @@ public class MessageFactory {
         SimpleMessage message = null;
 
         switch (id) {
-            case KEPP_ALIVE: //KeepAlive
+            case KEEP_ALIVE: //KeepAlive
                 message = KEEP_ALIVE_MESSAGE;
                 break;
             case ACK:
